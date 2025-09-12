@@ -1,0 +1,87 @@
+package int_byte_utils
+
+import (
+	"bytes"
+	"github.com/stretchr/testify/assert"
+	"math"
+	"testing"
+)
+
+func testUint(t *testing.T, v uint) {
+	t.Log(v)
+	buff := bytes.NewBuffer([]byte{})
+	n, err := WriteUintAsBytes(v, buff)
+	assert.NoError(t, err)
+	t.Log(n)
+	t.Log(buff.Bytes())
+	var val uint
+	n, err, val = ReadUintFromBytes(buff)
+	assert.NoError(t, err)
+	t.Log(n)
+	t.Log(val)
+	assert.Equal(t, v, val)
+}
+
+func testUintReadInt(t *testing.T, v uint) {
+	t.Log(v)
+	buff := bytes.NewBuffer([]byte{})
+	n, err := WriteUintAsBytes(v, buff)
+	assert.NoError(t, err)
+	t.Log(n)
+	t.Log(buff.Bytes())
+	var val int
+	n, err, val = ReadIntFromBytes(buff)
+	assert.NoError(t, err)
+	t.Log(n)
+	t.Log(val)
+	if v == highestBit {
+		assert.Equal(t, math.MinInt, val)
+	} else if (v & highestBit) == 0 {
+		assert.Equal(t, int(v), val)
+	} else {
+		assert.Equal(t, int(-(v & ^highestBit)), val)
+	}
+}
+
+func TestUint(t *testing.T) {
+	t.Run("Uint0", func(t *testing.T) {
+		testUint(t, 0)
+	})
+	t.Run("Uint1", func(t *testing.T) {
+		testUint(t, 1)
+	})
+	t.Run("Uint65537", func(t *testing.T) {
+		testUint(t, 65537)
+	})
+	t.Run("IntMax", func(t *testing.T) {
+		testUint(t, math.MaxInt)
+	})
+	t.Run("IntMax+1", func(t *testing.T) {
+		testUint(t, math.MaxInt+1)
+	})
+	t.Run("UintMax", func(t *testing.T) {
+		testUint(t, math.MaxUint)
+	})
+}
+
+func TestUintReadInt(t *testing.T) {
+	t.Run("Uint0", func(t *testing.T) {
+		testUintReadInt(t, 0)
+	})
+	t.Run("Uint1", func(t *testing.T) {
+		testUintReadInt(t, 1)
+	})
+	t.Run("Uint65537", func(t *testing.T) {
+		testUintReadInt(t, 65537)
+	})
+	t.Run("IntMax", func(t *testing.T) {
+		testUintReadInt(t, math.MaxInt)
+	})
+	t.Run("IntMax+1", func(t *testing.T) {
+		testUintReadInt(t, math.MaxInt+1)
+	})
+	t.Run("UintMax", func(t *testing.T) {
+		testUintReadInt(t, math.MaxUint)
+	})
+}
+

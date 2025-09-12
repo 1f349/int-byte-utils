@@ -9,6 +9,9 @@ import (
 // OverflowError the read value has overflowed the container.
 var OverflowError = errors.New("overflow")
 
+const bits7 = 127
+const bit8 = 128
+
 // WriteUintAsBytes writes an integer to an io.Writer
 func WriteUintAsBytes(i uint, writer io.Writer) (n int, err error) {
 	if i == 0 {
@@ -18,10 +21,10 @@ func WriteUintAsBytes(i uint, writer io.Writer) (n int, err error) {
 	n = 0
 	currentI := i
 	for currentI > 0 {
-		var bt = byte(currentI & 127)
+		var bt = byte(currentI & bits7)
 		currentI = currentI >> 7
 		if currentI > 0 {
-			bt |= 128
+			bt |= bit8
 		}
 		cbw, err := writer.Write([]byte{bt})
 		n += cbw
@@ -32,7 +35,7 @@ func WriteUintAsBytes(i uint, writer io.Writer) (n int, err error) {
 	return n, nil
 }
 
-// ReadUintFromBytes  reads an integer from an io.Reader
+// ReadUintFromBytes reads an integer from an io.Reader
 func ReadUintFromBytes(r io.Reader) (n int, err error, val uint) {
 	cBuff := make([]byte, 1)
 	val = 0
@@ -44,15 +47,13 @@ func ReadUintFromBytes(r io.Reader) (n int, err error, val uint) {
 		if err != nil {
 			return n, err, val
 		}
-		if cBuff[0] < 128 {
+		if cBuff[0] < bit8 {
 			if val > val|uint(uint(cBuff[0])<<cBitSize) {
 				return n, OverflowError, math.MaxUint
 			}
-			//return cbr, nil, val + uint(uint(cBuff[0])<<cBitSize)
 			return n, nil, val | uint(uint(cBuff[0])<<cBitSize)
 		}
-		//val += uint(cBuff[0]&127) << cBitSize
-		val |= uint(cBuff[0]&127) << cBitSize
+		val |= uint(cBuff[0]&bits7) << cBitSize
 		cBitSize += 7
 	}
 	return n, OverflowError, val

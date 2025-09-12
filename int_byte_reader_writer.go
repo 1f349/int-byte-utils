@@ -21,7 +21,7 @@ func WriteIntAsBytes(i int, writer io.Writer) (n int, err error) {
 	}
 }
 
-// ReadIntFromBytes  reads an integer from an io.Reader supporting negative numbers
+// ReadIntFromBytes reads an integer from an io.Reader supporting negative numbers
 // with the sign bit as the first bit of the last byte
 func ReadIntFromBytes(r io.Reader) (n int, err error, val int) {
 	var uval uint
