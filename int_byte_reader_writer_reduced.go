@@ -31,10 +31,6 @@ func ReadIntFromBytesReduced(r io.Reader) (n int, err error, val int) {
 	var uval uint
 	n, err, uval = ReadUintFromBytes(r)
 	ui := (uval & bits6) | (uval>>7)<<6
-	println(uval)
-	println(ui)
-	println(uval & bits6)
-	println((uval >> 7) << 6)
 	if uval == bit7 { // Negative 0 aka math.MinInt aka bit7
 		return n, err, math.MinInt
 	} else if (uval & bit7) == 0 {
