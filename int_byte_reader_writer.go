@@ -26,7 +26,7 @@ func WriteIntAsBytes(i int, writer io.Writer) (n int, err error) {
 func ReadIntFromBytes(r io.Reader) (n int, err error, val int) {
 	var uval uint
 	n, err, uval = ReadUintFromBytes(r)
-	if uval == highestBit { // Negative 0 aka math.MinInt aka -highestBit
+	if uval == highestBit { // Negative 0 aka math.MinInt aka highestBit
 		return n, err, math.MinInt
 	} else if (uval & highestBit) == 0 {
 		return n, err, int(uval)
