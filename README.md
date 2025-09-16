@@ -1,6 +1,7 @@
 # Int Byte Utils
 
 Utilities for converting (u)integers to and from a slice of bytes; supports the standard io.Writer and io.Reader.
+This is almost the same as varint provided in the standard encoding/binary package with different interface targets.
 
 ## Format
 All byte data is treated as unsigned integers by default, 
@@ -26,7 +27,8 @@ where it being set means negative, this is the standard overflow conversion beha
 This bit would be located in the last byte of the written data as the second most significant byte.
 
 There is also a reduced format that moves the sign bit to the second most significant bit of the first byte, 
-the 7th bit of the uinteger. This allows for the negative numbers to have a smaller footprint similar to their positive counterparts.
+the 7th bit of the uinteger. This allows for the negative numbers to have a smaller footprint similar to their positive counterparts 
+as the sign bit does not have to be at the most significant bit of a uint.
 
 ## License
 BSD 3-Clause - (C) 1f349 2025

@@ -49,7 +49,7 @@ func ReadUintFromBytes(r io.Reader) (n int, err error, val uint) {
 			return n, err, val
 		}
 		if cBuff[0] < bit8 {
-			if val > val|uint(uint(cBuff[0])<<cBitSize) {
+			if (uint(cBuff[0])<<cBitSize)>>cBitSize < uint(cBuff[0]) {
 				return n, OverflowError, math.MaxUint
 			}
 			return n, nil, val | uint(uint(cBuff[0])<<cBitSize)
