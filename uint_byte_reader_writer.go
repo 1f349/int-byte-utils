@@ -11,6 +11,7 @@ var OverflowError = errors.New("overflow")
 
 const bits7 = 127
 const bit8 = 128
+const platformBits = 32 << (^uint(0) >> 63) // from go math package
 
 // WriteUintAsBytes writes an integer to an io.Writer
 func WriteUintAsBytes(i uint, writer io.Writer) (n int, err error) {
@@ -41,7 +42,7 @@ func ReadUintFromBytes(r io.Reader) (n int, err error, val uint) {
 	val = 0
 	cBitSize := 0
 	n = 0
-	for val < math.MaxUint {
+	for cBitSize <= platformBits-1 {
 		br, err := io.ReadFull(r, cBuff)
 		n += br
 		if err != nil {

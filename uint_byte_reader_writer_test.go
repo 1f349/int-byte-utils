@@ -43,6 +43,23 @@ func testUintReadInt(t *testing.T, v uint) {
 	}
 }
 
+func testUintReadOverflow(t *testing.T) {
+	const btsLen = 255
+	bts := make([]byte, btsLen)
+	for i := 0; i < btsLen; i++ {
+		bts[i] = byte(bit8)
+	}
+	buff := bytes.NewBuffer(bts)
+	var n, err, val = ReadUintFromBytes(buff)
+	t.Log(n)
+	t.Log(err)
+	t.Log(val)
+	assert.Error(t, err)
+	assert.Equal(t, OverflowError, err)
+	assert.Equal(t, uint(0), val)
+	assert.Equal(t, 10, n)
+}
+
 func TestUint(t *testing.T) {
 	t.Run("Uint0", func(t *testing.T) {
 		testUint(t, 0)
@@ -62,6 +79,7 @@ func TestUint(t *testing.T) {
 	t.Run("UintMax", func(t *testing.T) {
 		testUint(t, math.MaxUint)
 	})
+	t.Run("UintOverflow", testUintReadOverflow)
 }
 
 func TestUintReadInt(t *testing.T) {
@@ -84,4 +102,3 @@ func TestUintReadInt(t *testing.T) {
 		testUintReadInt(t, math.MaxUint)
 	})
 }
-
