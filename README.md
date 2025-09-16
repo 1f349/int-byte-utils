@@ -12,13 +12,13 @@ This allows for a full uinteger to be stored without explicitly recording the le
 ### EG:
 65537 = [129 128 4] = [~~1~~0000001 ~~1~~0000000 ~~0~~0000100] -> [1 0 4]
 
-The first byte is 1-64 so 2^0=1
+The first byte is 64-1 so 2^0=1
 
-The second byte is 128-8192 so 0
+The second byte is 8192-128 so 0
 
-The third byte is 16384-1048576 so 2^16=65536
+The third byte is 1048576-16384 so 2^16=65536
 
-65536 + 1 = 65537
+1 + 0 + 65536 = 65537
 
 ## Integer Format
 The standard format utilizes the most significant bit of the uinteger to represent the sign byte, 
