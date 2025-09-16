@@ -26,8 +26,8 @@ The standard format utilizes the most significant bit of the uinteger to represe
 where it being set means negative, this is the standard overflow conversion behaviour in C between signed and unsigned.
 This bit would be located in the last byte of the written data as the second most significant byte.
 
-There is also a reduced format that moves the sign bit to the second most significant bit of the first byte, 
-the 7th bit of the uinteger. This allows for the negative numbers to have a smaller footprint similar to their positive counterparts 
+There is also a reduced format that moves the sign bit to the least significant bit of the first byte, 
+the 1st bit of the uinteger. This allows for the negative numbers to have a smaller footprint similar to their positive counterparts 
 as the sign bit does not have to be at the most significant bit of a uint.
 
 ## License
