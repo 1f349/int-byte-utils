@@ -1,3 +1,32 @@
 # Int Byte Utils
 
-Utilities for converting integers to and from a length of bytes; supports the standard writer and reader.
+Utilities for converting (u)integers to and from a slice of bytes; supports the standard io.Writer and io.Reader.
+
+## Format
+All byte data is treated as unsigned integers by default, 
+the most significant bit of each byte signifies another byte follows, 
+the rest of the bits are in order within each byte, representing the most significant to the least significant bit, 
+however, the bytes are in the reverse order where the least significant bits are in the first byte and the most significant in the last byte.
+This allows for a full uinteger to be stored without explicitly recording the length of the structure.
+
+### EG:
+65537 = [129 128 4] = [~~1~~0000001 ~~1~~0000000 ~~0~~0000100] -> [1 0 4]
+
+The first byte is 1-64 so 2^0=1
+
+The second byte is 128-8192 so 0
+
+The third byte is 16384-1048576 so 2^16=65536
+
+65536 + 1 = 65537
+
+## Integer Format
+The standard format utilizes the most significant bit of the uinteger to represent the sign byte, 
+where it being set means negative, this is the standard overflow conversion behaviour in C between signed and unsigned.
+This bit would be located in the last byte of the written data as the second most significant byte.
+
+There is also a reduced format that moves the sign bit to the second most significant bit of the first byte, 
+the 7th bit of the uinteger. This allows for the negative numbers to have a smaller footprint similar to their positive counterparts.
+
+## License
+BSD 3-Clause - (C) 1f349 2025
