@@ -3,7 +3,6 @@ package int_byte_utils
 import (
 	"errors"
 	"io"
-	"math"
 )
 
 // OverflowError the read value has overflowed the container.
@@ -22,10 +21,16 @@ func WriteUintAsBytes(i uint, writer io.Writer) (n int, err error) {
 	n = 0
 	currentI := i
 	for currentI > 0 {
-		var bt = byte(currentI & bits7)
-		currentI = currentI >> 7
-		if currentI > 0 {
-			bt |= bit8
+		var bt byte
+		if n == 8 { // (8+1)*8 = 56, last byte for uint64 uses most significant as storage rather than an extension signifier
+			bt = byte(currentI)
+			currentI = 0
+		} else {
+			bt = byte(currentI & bits7)
+			currentI = currentI >> 7
+			if currentI > 0 {
+				bt |= bit8
+			}
 		}
 		cbw, err := writer.Write([]byte{bt})
 		n += cbw
@@ -48,10 +53,8 @@ func ReadUintFromBytes(r io.Reader) (n int, err error, val uint) {
 		if err != nil {
 			return n, err, val
 		}
-		if cBuff[0] < bit8 {
-			if (uint(cBuff[0])<<cBitSize)>>cBitSize < uint(cBuff[0]) {
-				return n, OverflowError, math.MaxUint
-			}
+		// Allow for storing a 64 bit uint within 9 bytes by sacrificing the use of the extender bit and limiting support to 64 bits
+		if cBuff[0] < bit8 || cBitSize >= 56 {
 			return n, nil, val | uint(uint(cBuff[0])<<cBitSize)
 		}
 		val |= uint(cBuff[0]&bits7) << cBitSize
