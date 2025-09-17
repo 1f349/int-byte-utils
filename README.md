@@ -1,7 +1,8 @@
 # Int Byte Utils
 
 Utilities for converting (u)integers to and from a slice of bytes; supports the standard io.Writer and io.Reader.
-This is almost the same as varint provided in the standard encoding/binary package with different interface targets.
+This is almost the same as varint provided in the standard encoding/binary package with different interface targets
+and that only up to 64 bits is supported allowing for 9 byte uint max storage rather than 10 bytes.
 
 ## Format
 All byte data is treated as unsigned integers by default, 
@@ -9,6 +10,8 @@ the most significant bit of each byte signifies another byte follows,
 the rest of the bits are in order within each byte, representing the most significant to the least significant bit, 
 however, the bytes are in the reverse order where the least significant bits are in the first byte and the most significant in the last byte.
 This allows for a full uinteger to be stored without explicitly recording the length of the structure.
+However, when the most significant bit of a uint64 is in use, rather than extend for another byte, the most significant bit is used for storage
+allowing for a 9 byte max size as opposed to 10 bytes sacrificing support for 128 bit uints but saving space.
 
 ### EG:
 65537 = [129 128 4] = [~~1~~0000001 ~~1~~0000000 ~~0~~0000100] -> [1 0 4]
