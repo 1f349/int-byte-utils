@@ -14,6 +14,8 @@ func testUint(t *testing.T, v uint) {
 	assert.NoError(t, err)
 	t.Log(n)
 	t.Log(buff.Bytes())
+	t.Log(LenUintAsBytes(v))
+	assert.Equal(t, LenUintAsBytes(v), buff.Len())
 	var val uint
 	n, err, val = ReadUintFromBytes(buff)
 	assert.NoError(t, err)

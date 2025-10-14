@@ -14,6 +14,8 @@ func testIntReduced(t *testing.T, v int) {
 	assert.NoError(t, err)
 	t.Log(n)
 	t.Log(buff.Bytes())
+	t.Log(LenIntAsBytesReduced(v))
+	assert.Equal(t, LenIntAsBytesReduced(v), buff.Len())
 	var val int
 	n, err, val = ReadIntFromBytesReduced(buff)
 	assert.NoError(t, err)

@@ -12,6 +12,24 @@ const bits7 = 127
 const bit8 = 128
 const platformBits = 32 << (^uint(0) >> 63) // from go math package
 
+// LenUintAsBytes gets the length of the data representing the passed value
+func LenUintAsBytes(i uint) (n int) {
+	if i == 0 {
+		return 1
+	}
+	n = 0
+	currentI := i
+	for currentI > 0 {
+		if n == 8 { // (8+1)*8 = 56, last byte for uint64 uses most significant as storage rather than an extension signifier
+			currentI = 0
+		} else {
+			currentI = currentI >> 7
+		}
+		n++
+	}
+	return
+}
+
 // WriteUintAsBytes writes an integer to an io.Writer
 func WriteUintAsBytes(i uint, writer io.Writer) (n int, err error) {
 	if i == 0 {
