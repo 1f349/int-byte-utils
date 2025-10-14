@@ -14,6 +14,8 @@ func testUint(t *testing.T, v uint) {
 	assert.NoError(t, err)
 	t.Log(n)
 	t.Log(buff.Bytes())
+	t.Log(LenUintAsBytes(v))
+	assert.Equal(t, LenUintAsBytes(v), buff.Len())
 	var val uint
 	n, err, val = ReadUintFromBytes(buff)
 	assert.NoError(t, err)
@@ -54,10 +56,9 @@ func testUintReadOverread(t *testing.T) {
 	t.Log(n)
 	t.Log(err)
 	t.Log(val)
-	assert.Error(t, err)
-	assert.Equal(t, OverflowError, err)
-	assert.Equal(t, uint(0), val)
-	assert.Equal(t, 10, n)
+	assert.NoError(t, err)
+	assert.Equal(t, uint(math.MaxInt)+1, val)
+	assert.Equal(t, 9, n)
 }
 
 func testUintReadOverflow(t *testing.T) {
@@ -67,10 +68,9 @@ func testUintReadOverflow(t *testing.T) {
 	t.Log(n)
 	t.Log(err)
 	t.Log(val)
-	assert.Error(t, err)
-	assert.Equal(t, OverflowError, err)
-	assert.Equal(t, uint(math.MaxUint), val)
-	assert.Equal(t, 10, n)
+	assert.NoError(t, err)
+	assert.Equal(t, uint(math.MaxInt)+1, val)
+	assert.Equal(t, 9, n)
 }
 
 func TestUint(t *testing.T) {

@@ -5,6 +5,18 @@ import (
 	"math"
 )
 
+// LenIntAsBytesReduced gets the length of the data representing the passed value
+func LenIntAsBytesReduced(i int) int {
+	var ui uint
+	if i < 0 {
+		ui = uint(-i)
+		return LenUintAsBytes(ui<<1 | 1)
+	} else {
+		ui = uint(i)
+		return LenUintAsBytes(ui << 1)
+	}
+}
+
 // WriteIntAsBytesReduced writes an integer to an io.Writer supporting negative integers
 // with the sign bit as the last bit of the first byte
 func WriteIntAsBytesReduced(i int, writer io.Writer) (n int, err error) {

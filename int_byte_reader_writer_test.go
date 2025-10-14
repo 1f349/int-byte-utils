@@ -14,6 +14,8 @@ func testInt(t *testing.T, v int) {
 	assert.NoError(t, err)
 	t.Log(n)
 	t.Log(buff.Bytes())
+	t.Log(LenIntAsBytes(v))
+	assert.Equal(t, LenIntAsBytes(v), buff.Len())
 	var val int
 	n, err, val = ReadIntFromBytes(buff)
 	assert.NoError(t, err)

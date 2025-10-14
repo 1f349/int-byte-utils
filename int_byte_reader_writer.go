@@ -7,6 +7,15 @@ import (
 
 const highestBit = uint((math.MaxUint + 1) >> 1)
 
+// LenIntAsBytes gets the length of the data representing the passed value
+func LenIntAsBytes(i int) int {
+	if i < 0 {
+		return LenUintAsBytes(uint(-i) | highestBit)
+	} else {
+		return LenUintAsBytes(uint(i))
+	}
+}
+
 // WriteIntAsBytes writes an integer to an io.Writer supporting negative integers
 // with the sign bit as the first bit of the last byte
 func WriteIntAsBytes(i int, writer io.Writer) (n int, err error) {
